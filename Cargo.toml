@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 hound = "3.4"
 structopt = "0.3"
+sdr = "0.7"

@@ -1,0 +1,3 @@
+[submodule "hw-resample"]
+	path = hw-resample
+	url = git@github.com:pdx-cs-sound/hw-resample

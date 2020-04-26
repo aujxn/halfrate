@@ -16,5 +16,8 @@ struct Opt {
 }
 
 fn main() {
-    //let wav = WavReader::open(file).unwrap();
+    let opt = Opt::from_args();
+    let wav = WavReader::open(opt.file).unwrap();
+
+    println!("{:?}", wav.spec());
 }
