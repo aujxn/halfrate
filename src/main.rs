@@ -6,9 +6,9 @@ use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
 struct Opt {
-    // The wav file(s) to resample.
-    // For multiple files at once, seperate with escaped spaces.
-    // example --file file1.wav\ file2.wav\ file3.wav
+    /// The wav file(s) to resample.
+    /// For multiple files at once, seperate with escaped spaces.
+    /// example: --file file1.wav\ file2.wav\ file3.wav
     #[structopt(short, long, default_value = "gc.wav sine.wav synth.wav")]
     files: String,
 }
