@@ -1,11 +1,21 @@
 ## Austen Nelson --- halfrate.rs
 
+# Usage
+```
+cargo run --release -- --file file1.wav\ file2.wav\ ...
+```
+
+# Purpose
 This program takes .wav files with a 16bit sample size and 48khz sample rate and
-resamples them to 24khz sample rate. To prevent aliasing of frequencies in the
-higher range of the source signal, a low half pass filter is applied to the input
+resamples them to 24khz sample rate.
+
+# Low-pass Filter
+To prevent aliasing of frequencies in the
+higher range of the source signal, a low-half-pass filter is applied to the input
 using a finite impulse response filter. Coefficients for the filter were obtained
 from scipy's signal module.
 
+# [Signals and coefficients](https://github.com/pdx-cs-sound/hw-resample "Bart Massey's Sound and Music Github")
 ```
 # Build filter coefficients for a half-band filter.
 # Bart Massey 2020
@@ -25,5 +35,5 @@ for s in subband:
 ```
 
 Convolving these coefficients on the source signal with a stride of 2
-results in a signal with half the sample rate and limited aliasing of
+results in a signal decimated to half the sample rate and limited aliasing of
 the upper frequencies.
