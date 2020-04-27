@@ -1,4 +1,5 @@
 use hound::{SampleFormat, WavReader, WavSpec, WavWriter};
+use rayon::prelude::*;
 use std::fs::File;
 use std::io::BufWriter;
 use structopt::StructOpt;
@@ -149,14 +150,6 @@ fn convolve_and_decimate(input: Vec<f64>) -> Vec<i16> {
         0.0007402732643054117,
     ];
 
-    // grab the first 45 samples unchanged
-    let mut output: Vec<i16> = input
-        .iter()
-        .take(90)
-        .step_by(2)
-        .map(|&x| x as i16)
-        .collect();
-
     // vector mult
     let dot = |x: &[f64], y: &[f64]| x.iter().zip(y.iter()).fold(0.0, |acc, (x, y)| acc + x * y);
 
@@ -173,10 +166,19 @@ fn convolve_and_decimate(input: Vec<f64>) -> Vec<i16> {
     };
 
     // convolve coefficients over input and skip every other sample to half the rate
-    for x in (91..input.len()).step_by(2) {
-        let product = dot(&coef, &input[x - 91..x]);
-        output.push(f64_to_i16_safe(product));
-    }
-
-    output
+    (0..input.len())
+        .into_par_iter()
+        // skip evey other sample to decimate input to halfrate
+        .filter(|i| i % 2 == 1)
+        .map(|i| {
+            // get the first 45 samples unchanged
+            if i < 91 {
+                input[i] as i16
+            // otherwise do the convolution
+            } else {
+                let product = dot(&coef, &input[i - 91..i]);
+                f64_to_i16_safe(product)
+            }
+        })
+        .collect()
 }
