@@ -6,7 +6,9 @@ use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
 struct Opt {
-    // The wav file to resample
+    // The wav file(s) to resample.
+    // For multiple files at once, seperate with escaped spaces.
+    // example --file file1.wav\ file2.wav\ file3.wav
     #[structopt(short, long, default_value = "gc.wav sine.wav synth.wav")]
     files: String,
 }
@@ -167,6 +169,7 @@ fn convolve_and_decimate(input: Vec<f64>) -> Vec<i16> {
 
     // convolve coefficients over input and skip every other sample to half the rate
     (0..input.len())
+        // need4speed
         .into_par_iter()
         // skip evey other sample to decimate input to halfrate
         .filter(|i| i % 2 == 1)
